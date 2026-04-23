@@ -1,0 +1,140 @@
+{
+  "users": [
+    {
+      "_id": "mo9oql0rtuj126efu4",
+      "username": "testuser",
+      "password": "$2b$10$A0oBNh9mBtDJ64BAqWyiVu0kZnbj2Ka9Ow5YahNlisZW9pfGZfWpm",
+      "name": "Test Student",
+      "rollNo": "2K22/CS/001",
+      "email": "test@dtu.ac.in",
+      "createdAt": "2026-04-22T06:42:12.843Z"
+    },
+    {
+      "_id": "mo9oxczgor830wrwwl",
+      "username": "yogesh12yogesh",
+      "password": "$2b$10$ZM6PgaI7/p.OEQI4Deta5.qDdTfbaZGvhfw1db/rI.Aab2r.HUJT2",
+      "name": "Yogesh Kumar",
+      "rollNo": "2K22/CS/001",
+      "email": "yogesh@dtu.ac.in",
+      "createdAt": "2026-04-22T06:47:29.020Z"
+    },
+    {
+      "_id": "mo9p5x4mcsz69teptel",
+      "username": "theyogeshm",
+      "password": "$2b$10$i0iybcEv2KQRBPUlKQQv.OhD3hGt3o1jeW6SDe3Q7osK8738aZ556",
+      "name": "Yogesh Kumar",
+      "rollNo": "25/A06/068",
+      "email": "yogeshkumarlearner@gmail.com",
+      "createdAt": "2026-04-22T06:54:08.374Z",
+      "bio": "I will never give up.",
+      "linkedin": "",
+      "github": "",
+      "timetable": [
+        {
+          "day": "MO",
+          "slot": "8-9",
+          "subject": "Discrete",
+          "room": ""
+        },
+        {
+          "day": "MO",
+          "slot": "12-1",
+          "subject": "Data Lab",
+          "room": ""
+        },
+        {
+          "day": "MO",
+          "slot": "2-3",
+          "subject": "Physics",
+          "room": ""
+        },
+        {
+          "day": "TU",
+          "slot": "8-9",
+          "subject": "EVS",
+          "room": ""
+        },
+        {
+          "day": "TU",
+          "slot": "10-11",
+          "subject": "Discrete",
+          "room": "ty"
+        },
+        {
+          "day": "TU",
+          "slot": "12-1",
+          "subject": "Physics Lab",
+          "room": ""
+        },
+        {
+          "day": "TU",
+          "slot": "2-3",
+          "subject": "Maths",
+          "room": ""
+        },
+        {
+          "day": "WE",
+          "slot": "10-11",
+          "subject": "Maths",
+          "room": ""
+        },
+        {
+          "day": "WE",
+          "slot": "12-1",
+          "subject": "Physics",
+          "room": ""
+        },
+        {
+          "day": "WE",
+          "slot": "1-2",
+          "subject": "Data",
+          "room": ""
+        },
+        {
+          "day": "TH",
+          "slot": "10-11",
+          "subject": "Data",
+          "room": ""
+        },
+        {
+          "day": "TH",
+          "slot": "1-2",
+          "subject": "Maths",
+          "room": ""
+        },
+        {
+          "day": "FR",
+          "slot": "10-11",
+          "subject": "Discrete",
+          "room": ""
+        },
+        {
+          "day": "FR",
+          "slot": "12-1",
+          "subject": "Basic ML",
+          "room": ""
+        },
+        {
+          "day": "FR",
+          "slot": "2-3",
+          "subject": "Basic ML Lab",
+          "room": ""
+        }
+      ]
+    },
+    {
+      "_id": "moabreqxx4034a7cydn",
+      "username": "testuser123",
+      "password": "$2b$10$kLGx/uUDpnILAEfIiaXyoe0JSvtPYYO5sAAlyZLOZ3SvdvGmxCdj2",
+      "name": "Test User",
+      "rollNo": "",
+      "email": "",
+      "bio": "Hello, I am a test user.",
+      "linkedin": "https://linkedin.com/in/test",
+      "github": "https://github.com/test",
+      "photo": "",
+      "createdAt": "2026-04-22T17:26:42.537Z"
+    }
+  ],
+  "attendance": []
+}

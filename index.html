@@ -1,0 +1,832 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <style></style>
+    <style>
+      /* ═══════════════════════════════════════════════════
+         ROYAL DARK MODE — full overhaul
+      ═══════════════════════════════════════════════════ */
+      body.dark {
+        background: #0e1117;
+        color: #c9d1e0;
+      }
+      /* Header */
+      body.dark header {
+        background: linear-gradient(90deg,#13161f,#1a1f30);
+        border-color: #1e2540;
+        box-shadow: 0 2px 16px rgba(26,231,166,0.07);
+      }
+      body.dark .its { color: rgb(26,231,166); text-shadow: 0 0 12px rgba(26,231,166,0.45); }
+      body.dark .right a { color: #c9d1e0; }
+      body.dark .fa-solid { color: #5a678a; }
+      body.dark header .fa-solid:hover { color: rgb(26,231,166); filter: drop-shadow(0 0 6px rgba(26,231,166,0.6)); }
+      body.dark .text { color: #e0e6f0; }
+      /* Search */
+      body.dark .sea { background: #181c28; border-color: #1e2540; }
+      body.dark input { background: #181c28; color: #c9d1e0; border-color: #1e2540; }
+      body.dark input:focus-visible { outline: 1px solid rgb(26,231,166); }
+      /* Sidebar nav */
+      body.dark .nav ul { background: linear-gradient(180deg,#13161f,#181c28); border-color: #1e2540; box-shadow: 2px 0 16px rgba(0,0,0,0.3); }
+      body.dark .nav a { color: #6b7a99; border-color: #2a3050; }
+      body.dark .nav a:hover,
+      body.dark .nav a:hover i {
+        background: linear-gradient(90deg,rgb(26,231,166),#00bfae);
+        color: #fff;
+        box-shadow: 0 0 16px rgba(26,231,166,0.45);
+        border-color: rgb(26,231,166);
+        transform: translateX(4px);
+        transition: all 0.2s ease;
+      }
+      body.dark .nav a.active,
+      body.dark .nav a.active i {
+        background: linear-gradient(90deg,rgb(26,231,166),#00bfae);
+        color: #fff;
+        box-shadow: 0 0 14px rgba(26,231,166,0.5);
+      }
+      /* Cards (dashboard) */
+      body.dark .card {
+        background: linear-gradient(145deg,#161926,#1c2135);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+        border: 1px solid #1e2540;
+      }
+      body.dark .day  { color: #7a8aaa; }
+      body.dark .sub  { color: #e0e6f0; border-color: rgb(26,231,166); text-shadow: 0 0 8px rgba(26,231,166,0.2); }
+      body.dark .btn .present { background: rgba(55,255,85,0.15); border-color: rgba(55,255,85,0.4); color: #37ff55; }
+      body.dark .btn .absent  { background: rgba(255,69,75,0.15);  border-color: rgba(255,69,75,0.4);  color: #ff454b; }
+      body.dark .btn .miss    { background: rgba(232,255,55,0.12); border-color: rgba(232,255,55,0.4); color: #e8e000; }
+      body.dark .btn .leave   { background: rgba(55,222,255,0.12); border-color: rgba(55,222,255,0.4); color: #37deff; }
+      body.dark .btn .present:hover { background: rgba(55,255,85,0.9);  color: #000; box-shadow: 0 0 14px rgba(55,255,85,0.5); }
+      body.dark .btn .absent:hover  { background: rgba(255,69,75,0.9);  color: #fff; box-shadow: 0 0 14px rgba(255,69,75,0.5); }
+      body.dark .btn .miss:hover    { background: rgba(232,255,55,0.9); color: #000; box-shadow: 0 0 14px rgba(232,255,55,0.5); }
+      body.dark .btn .leave:hover   { background: rgba(55,222,255,0.9); color: #000; box-shadow: 0 0 14px rgba(55,222,255,0.5); }
+      /* Subcard (attendance/analytics) */
+      body.dark .subcard {
+        background: linear-gradient(145deg,#161926,#1c2135);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+        border: 1px solid #1e2540;
+      }
+      body.dark .sub2 { color: #e0e6f0; border-color: rgb(26,231,166); }
+      /* Attendance count rows */
+      body.dark .lists div {
+        background: #1a1f30;
+        color: #c9d1e0;
+        border: 1px solid #22283d;
+        transition: all 0.2s;
+      }
+      body.dark .lists div:hover {
+        background: #1e2540;
+        color: rgb(26,231,166);
+        box-shadow: 0 0 10px rgba(26,231,166,0.2);
+        transform: translateX(4px);
+      }
+      /* FIX: count span inside lists div must be visible */
+      body.dark .lists div span,
+      body.dark .lists span {
+        background: #0e1117;
+        color: rgb(26,231,166);
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-weight: 700;
+        border: 1px solid rgba(26,231,166,0.3);
+      }
+      body.dark .att-per { color: #00e5c0 !important; background: transparent !important; border: none !important; }
+      body.dark .can-miss { color: #ffd700 !important; background: transparent !important; border: none !important; }
+      /* Subjects links */
+      body.dark .lists ul { gap: 14px; }
+      body.dark .lists a {
+        background: #1a1f30;
+        color: #c9d1e0;
+        border: 1px solid #22283d;
+        transition: all 0.22s;
+      }
+      body.dark .lists a:hover,
+      body.dark .lists a:hover i {
+        background: linear-gradient(90deg,rgb(26,231,166),#00bfae);
+        color: #fff;
+        box-shadow: 0 0 14px rgba(26,231,166,0.4);
+        border-color: rgb(26,231,166);
+        transform: translateX(3px);
+      }
+      /* Settings links */
+      body.dark .lists2 a {
+        background: #1a1f30;
+        color: #c9d1e0;
+        border: 1px solid #22283d;
+        transition: all 0.22s;
+      }
+      body.dark .lists2 a:hover,
+      body.dark .lists2 a:hover i {
+        background: linear-gradient(90deg,rgb(26,231,166),#00bfae);
+        color: #fff;
+        box-shadow: 0 0 14px rgba(26,231,166,0.4);
+        border-color: rgb(26,231,166);
+        transform: translateX(3px);
+      }
+      /* Analytics overall rows */
+      body.dark .lists3 li {
+        background: #1a1f30;
+        color: #c9d1e0;
+        border: 1px solid #22283d;
+        transition: all 0.2s;
+      }
+      body.dark .lists3 li:hover { background: #1e2540; color: rgb(26,231,166); box-shadow: 0 0 10px rgba(26,231,166,0.15); }
+      body.dark .lists3 span { color: rgb(26,231,166) !important; font-weight: 700; }
+      /* gpt panels (timetable, calendar, profile) */
+      body.dark .gpt {
+        background: linear-gradient(145deg,#161926,#1c2135);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+        border: 1px solid #1e2540;
+      }
+      body.dark .tablehead { color: #e0e6f0; }
+      body.dark .timetable th { background: #1a1f30; color: #7a8aaa; border-color: #22283d; }
+      body.dark .timetable td { background: #161926; color: #c9d1e0; border-color: #22283d; }
+      body.dark .timetable td:hover,
+      body.dark .timetable th:hover { background: rgba(26,231,166,0.12); color: rgb(26,231,166); }
+      body.dark .today-row td { background: rgba(26,231,166,0.18) !important; color: rgb(26,231,166) !important; font-weight: 700; box-shadow: inset 0 0 8px rgba(26,231,166,0.15); }
+      /* Calendar */
+      body.dark .cal-header button { background: #1a1f30; color: #c9d1e0; border: 1px solid #22283d; }
+      body.dark .cal-header button:hover { background: rgb(26,231,166); color: #fff; box-shadow: 0 0 12px rgba(26,231,166,0.4); }
+      body.dark .cal-days span { color: #5a678a; }
+      body.dark .cal-dates span:hover { background: rgba(26,231,166,0.15); color: rgb(26,231,166); }
+      body.dark .today { background: rgb(26,231,166); color: #fff; box-shadow: 0 0 12px rgba(26,231,166,0.5); }
+      /* Profile */
+      body.dark .word { border-color: rgb(26,231,166); box-shadow: 0 0 16px rgba(26,231,166,0.2); color: #e0e6f0; }
+      body.dark .word2 { background: #1a1f30; border: 1px solid #22283d; }
+      body.dark .word3 { color: #5a678a; }
+      body.dark .word4 { color: #c9d1e0; }
+      body.dark .word4 i { color: #e0e6f0; }
+      /* Popup */
+      body.dark .pop { background: linear-gradient(145deg,#161926,#1c2135); border: 1px solid #22283d; }
+      body.dark .pop .tit { color: #e0e6f0; }
+      body.dark .pop .msg { color: #8a9abb; }
+      /* Auth form inputs in dark */
+      body.dark .auth-input {
+        background: #1a1f30 !important;
+        color: #c9d1e0 !important;
+        border-color: #22283d !important;
+      }
+      body.dark .auth-input:focus { border-color: rgb(26,231,166) !important; box-shadow: 0 0 8px rgba(26,231,166,0.3); }
+      /* Today subject cards */
+      body.dark .today-sub-card {
+        background: linear-gradient(135deg,#1a1f30,#1e2540);
+        color: #e0e6f0;
+        border-color: rgb(26,231,166);
+        box-shadow: 0 0 14px rgba(26,231,166,0.2);
+      }
+      body.dark .today-sub-card:hover {
+        background: rgba(26,231,166,0.15);
+        box-shadow: 0 0 20px rgba(26,231,166,0.4);
+        transform: translateY(-3px);
+      }
+      /* Mobile bars */
+      body.dark .mobile-bars button { background: #1a1f30; color: #c9d1e0; border: 1px solid #22283d; }
+      /* ═══════════════════════════════════════════════════
+         TIMETABLE TODAY-CARDS (light mode)
+      ═══════════════════════════════════════════════════ */
+      #todaySubjectsWrap { margin-bottom: 16px; }
+      #todaySubjectsWrap .today-label {
+        font-size: 18px; font-weight: 600;
+        padding: 6px 0 10px 4px;
+        color: rgb(26,231,166);
+      }
+      #todaySubjectsWrap .today-cards { display: flex; flex-wrap: wrap; gap: 12px; }
+      .today-sub-card {
+        background: #fff;
+        border: 2px solid rgb(26,231,166);
+        border-radius: 14px;
+        padding: 14px 24px;
+        font-size: 20px;
+        font-weight: 600;
+        color: rgb(84,83,90);
+        box-shadow: 1px 1px 10px #ccc;
+        min-width: 140px;
+        text-align: center;
+        transition: all 0.2s ease;
+        cursor: default;
+      }
+      .today-sub-card:hover { box-shadow: 0 0 16px rgba(26,231,166,0.35); transform: translateY(-3px); }
+      /* ═══════════════════════════════════════════════════
+         AUTH FORM STYLES (profile login/signup)
+      ═══════════════════════════════════════════════════ */
+      .auth-section { padding: 10px 0; }
+      .auth-tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+      .auth-tab {
+        padding: 8px 28px; border-radius: 25px; cursor: pointer; font-size: 15px; font-weight: 600;
+        border: 2px solid rgb(26,231,166); background: transparent; color: rgb(26,231,166);
+        transition: all 0.2s;
+      }
+      .auth-tab.active, .auth-tab:hover { background: rgb(26,231,166); color: #fff; }
+      .auth-input {
+        display: block; width: 80%; margin: 0 auto 12px;
+        padding: 11px 16px; border: 2px solid #e0e0e0; border-radius: 10px;
+        font-size: 15px; background: #f4f4f6; color: #222;
+        font-family: Poppins, sans-serif;
+        transition: border-color 0.2s;
+      }
+      .auth-input:focus { border-color: rgb(26,231,166); outline: none; box-shadow: 0 0 6px rgba(26,231,166,0.25); }
+      .auth-btn {
+        display: block; width: 80%; margin: 10px;
+        padding: 12px; background: rgb(26,231,166); color: #fff;
+        border: none; border-radius: 10px; font-size: 16px; font-weight: 600;
+        cursor: pointer; transition: all 0.2s; font-family: Poppins, sans-serif;
+      }
+      .auth-btn:hover { background: rgb(20,200,145); box-shadow: 0 0 16px rgba(26,231,166,0.5); transform: translateY(-1px); }
+      .auth-err { color: #e74c3c; font-size: 13px; text-align: center; min-height: 18px; margin-top: 6px; }
+      .auth-icon { font-size: 48px; color: rgb(26,231,166); text-align: center; margin-bottom: 8px; }
+      .auth-title { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+      .auth-sub   { color: #888; font-size: 13px; text-align: center; margin-bottom: 18px; }
+    </style>
+  </head>
+  <body>
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+    <!-- Nav Overlay (mobile) -->
+    <div id="navOverlay"></div>
+    <header>
+      <div class="left">
+        <button id="hamburgerBtn" class="hamburger-btn" onclick="toggleMobileNav()" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="its">Its M.E. !!</div>
+      </div>
+      <div class="mid">
+        <div class="text">Dashboard</div>
+        <div class="sea">
+        <i id="magni" class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder=" Search here..." autocomplete="new-password" readonly name="search-query" />
+        </div>
+      </div>
+      <div class="right">
+        <ul>
+          <li>
+            <a href="#" class="luu" onclick="changelang()"
+              >Eng(<img src="https://flagcdn.com/in.svg" width="24" /> India)</a
+            >
+          </li>
+          <li>
+            <a href="https://chatgpt.com/" target="_blank"
+              ><img
+                src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
+                class="chatgpt-icon"
+            /></a>
+          </li>
+          <li>
+            <a href="#" onclick="notify()"><i class="fa-solid fa-bell"></i></a>
+          </li>
+          <li>
+            <a href="#" class="sett" onclick="showPage('settings', this)"
+              ><i class="fa-solid fa-gear"></i
+            ></a>
+          </li>
+          <li>
+            <a href="#" onclick="showPage('profile', this)"
+              ><div id="headerAvatar" class="header-avatar">
+                <img id="headerAvatarImg" src="" class="header-avatar-img" style="display:none;" />
+                <span id="headerAvatarInitials" class="header-avatar-initials">?</span>
+              </div></a
+            >
+          </li>
+        </ul>
+        <div class="nav-icons"></div>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        <div class="nav">
+          <ul>
+            <li>
+              <a href="#" data-page="dashboard" onclick="showPage('dashboard', this)"
+                ><i class="fa-solid fa-table-columns"></i>Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showPage('attendance', this)"
+                ><i class="fa-solid fa-clipboard-check"></i>Attendance</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showPage('subjects', this)"
+                ><i class="fa-solid fa-book-open"></i>Subjects</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showPage('timetable', this)"
+                ><i class="fa-solid fa-calendar-days"></i>Timetable</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showPage('analytics', this)"
+                ><i class="fa-solid fa-chart-line"></i>Analytics</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showPage('profile', this)"
+                ><i class="fa-solid fa-user"></i>Profile</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showPage('settings', this)"
+                ><i class="fa-solid fa-gear"></i>Settings</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="logout()"
+                ><i class="fa-solid fa-right-from-bracket"></i>Logout</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="content">
+          <section id="dashboard" class="page grid3 active">
+            <!-- Cards rendered dynamically by renderDashboardCards() in jss.js -->
+            <div id="dashboardEmptyMsg" style="display:none; padding:32px; text-align:center; color:#888; font-size:18px; grid-column:1/-1;">
+              📅 No classes today! Enjoy your day 🎉
+            </div>
+          </section>
+          <section id="attendance" class="page grid3 active">
+            <!-- Subcards rendered dynamically by renderAttendanceSubcards() in jss.js -->
+            <div id="attendanceEmptyMsg" style="display:none; padding:32px; text-align:center; color:#888; font-size:18px; grid-column:1/-1;">
+              📚 No subjects yet. Add your timetable first!
+            </div>
+          </section>
+
+          <section id="subjects" class="page grid3 active">
+            <!-- Subject cards rendered dynamically by renderSubjectsSection() in jss.js -->
+            <div id="subjectsEmptyMsg" style="display:none; padding:32px; text-align:center; color:#888; font-size:18px; grid-column:1/-1;">
+              📚 No subjects yet. Add your timetable first!
+            </div>
+          </section>
+          <!-- ══ TIMETABLE EDIT MODAL ══ -->
+          <div id="timetableModal" class="tt-modal hidden">
+            <div class="tt-modal-content">
+              <h3 class="tt-modal-title"><i class="fa-solid fa-calendar-days"></i> Edit Your Timetable</h3>
+              <p class="tt-modal-sub">Add or remove classes. Each row = one class slot.</p>
+              <div id="ttRowsContainer"></div>
+              <button class="tt-add-btn" onclick="addTimetableRow()"><i class="fa-solid fa-plus"></i> Add Class</button>
+              <div class="tt-modal-actions">
+                <button class="auth-btn" style="width:auto;padding:10px 28px;" onclick="saveTimetable()"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                <button class="restore-btn" onclick="restoreDefaultTimetable()"><i class="fa-solid fa-rotate-left"></i> Restore Default</button>
+                <button class="cancel-btn" onclick="closeTimetableModal()"><i class="fa-solid fa-xmark"></i> Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ══ FACULTY INFO EDIT MODAL ══ -->
+          <div id="facultyModal" class="tt-modal hidden">
+            <div class="tt-modal-content">
+              <h3 class="tt-modal-title"><i class="fa-solid fa-chalkboard-user"></i> Edit Faculty Info</h3>
+              <p class="tt-modal-sub">Add or update subject and faculty details.</p>
+              <div id="facultyRowsContainer"></div>
+              <button class="tt-add-btn" onclick="addFacultyRow()"><i class="fa-solid fa-plus"></i> Add Row</button>
+              <div class="tt-modal-actions">
+                <button class="auth-btn" style="width:auto;padding:10px 28px;" onclick="saveFacultyInfo()"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                <button class="restore-btn" onclick="restoreDefaultFacultyInfo()"><i class="fa-solid fa-rotate-left"></i> Restore Default</button>
+                <button class="cancel-btn" onclick="closeFacultyModal()"><i class="fa-solid fa-xmark"></i> Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <section id="timetable" class="page grid1 active">
+            <div class="gpt">
+              <!-- Today's subjects (day-filtered) -->
+              <div id="todaySubjectsWrap">
+                <div class="today-label">📅 Today's Subjects</div>
+                <div class="today-cards" id="todayCardsContainer"></div>
+              </div>
+              <div class="tt-section-header">
+                <div class="tablehead" style="margin:0;">Full Week Time Table</div>
+                <button class="edit-profile-btn" onclick="openTimetableModal()" id="editTimetableBtn"><i class="fa-solid fa-pen"></i> Edit Timetable</button>
+              </div>
+              <table class="timetable">
+                <tr>
+                  <th></th>
+                  <th>8-9</th>
+                  <th>9-10</th>
+                  <th>10-11</th>
+                  <th>11-12</th>
+                  <th>12-1</th>
+                  <th>1-2</th>
+                  <th>2-3</th>
+                  <th>3-4</th>
+                </tr>
+                <tbody id="weekTimetableBody">
+                <tr data-day="MO">
+                  <td>MO</td>
+                  <td colspan="2">Discrete</td>
+                  <td colspan="2"></td>
+                  <td colspan="2">Data Lab</td>
+                  <td colspan="2">Physics</td>
+                </tr>
+                <tr data-day="TU">
+                  <td>TU</td>
+                  <td colspan="2">EVS</td>
+                  <td>Discrete</td>
+                  <td></td>
+                  <td colspan="2">Physics Lab</td>
+                  <td>Maths</td>
+                  <td></td>
+                </tr>
+                <tr data-day="WE">
+                  <td>WE</td>
+                  <td colspan="2"></td>
+                  <td>Maths</td>
+                  <td></td>
+                  <td>Physics</td>
+                  <td colspan="2">Data</td>
+                  <td></td>
+                </tr>
+                <tr data-day="TH">
+                  <td>TH</td>
+                  <td colspan="2"></td>
+                  <td>Data</td>
+                  <td colspan="2"></td>
+                  <td colspan="2">Maths</td>
+                  <td></td>
+                </tr>
+                <tr data-day="FR">
+                  <td>FR</td>
+                  <td colspan="2"></td>
+                  <td>Discrete</td>
+                  <td></td>
+                  <td>Basic ML</td>
+                  <td></td>
+                  <td colspan="2">Basic ML Lab</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="gpt">
+              <div class="tt-section-header">
+                <div class="tablehead" style="margin:0;">Faculty Info</div>
+                <button class="edit-profile-btn" onclick="openFacultyModal()" id="editFacultyBtn"><i class="fa-solid fa-pen"></i> Edit Faculty</button>
+              </div>
+              <table class="timetable">
+                <tr>
+                  <th>Subject Code</th>
+                  <th>Subject Name</th>
+                  <th>Lecture</th>
+                  <th>Tutorial</th>
+                  <th>Practical</th>
+                  <th>Faculty Name</th>
+                </tr>
+                <tbody id="facultyTableBody">
+                  <tr>
+                    <td>AM102</td>
+                    <td>Maths</td>
+                    <td>3</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>Nitika</td>
+                  </tr>
+                  <tr>
+                    <td>AP102</td>
+                    <td>Physics</td>
+                    <td>3</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>Yogendra K Meena</td>
+                  </tr>
+                  <tr>
+                    <td>CS102</td>
+                    <td>Discrete</td>
+                    <td>3</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>Col R Sreejeth</td>
+                  </tr>
+                  <tr>
+                    <td>CS104/DA104</td>
+                    <td>Data</td>
+                    <td>3</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>Kavinder , Aanchal (lab)</td>
+                  </tr>
+                  <tr>
+                    <td>SEC-1(CS106)</td>
+                    <td>Basic ML</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>Anshika , Col R Sreejeth (lab)</td>
+                  </tr>
+                  <tr>
+                    <td>AEC/VAC</td>
+                    <td>EVS</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>Ravi</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section id="profile" class="page grid2 active">
+            <!-- ── Auth Wall (shown when NOT logged in) ── -->
+            <div class="gpt" id="profileLoginWall">
+              <div class="auth-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+              <div class="auth-title">Student Portal</div>
+              <div class="auth-sub">Login or create an account to track your attendance</div>
+              <div class="auth-tabs">
+                <button class="auth-tab active" id="tabLogin"  onclick="showAuthForm('login')">Login</button>
+                <button class="auth-tab"         id="tabSignup" onclick="showAuthForm('signup')">Sign Up</button>
+              </div>
+              <div id="profileLoginForm">
+                <input class="auth-input" type="text"     id="loginUser" placeholder="Username" />
+                <input class="auth-input" type="password" id="loginPass" placeholder="Password" />
+                <div class="auth-err" id="loginErr"></div>
+                <button class="auth-btn" onclick="doProfileLogin()">Login →</button>
+              </div>
+              <div id="profileSignupForm" style="display:none;">
+                <input class="auth-input" type="text"     id="signupName"  placeholder="Full Name *" />
+                <input class="auth-input" type="text"     id="signupUser"  placeholder="Username *" />
+                <input class="auth-input" type="password" id="signupPass"  placeholder="Password (min 6) *" />
+                <input class="auth-input" type="text"     id="signupRoll"  placeholder="Roll No (optional)" />
+                <input class="auth-input" type="email"    id="signupEmail" placeholder="Email (optional)" />
+                <div class="auth-err" id="signupErr"></div>
+                <button class="auth-btn" onclick="doProfileSignup()">Create Account →</button>
+              </div>
+            </div>
+
+            <!-- ── Profile (shown AFTER login) ── -->
+            <div class="gpt" id="profileInfo" style="display:none;">
+
+              <!-- VIEW MODE -->
+              <div id="profileViewMode">
+                <div class="profile-avatar-big">
+                  <img id="profilePhoto" src="" class="profile2" style="display:none;" />
+                  <div id="profileInitialsBig" class="profile-initials-big">?</div>
+                </div>
+                <div class="word">
+                  <div id="profileName">Student</div>
+                  <div id="profileUsername" style="font-size:15px;color:#888;">@username</div>
+                </div>
+                <div class="word2">
+                  <div class="word3">Academics</div>
+                  <div class="word4">B.Tech CSE · DTU</div>
+                  <div class="word3">Roll No</div>
+                  <div class="word4" id="profileRoll">N/A</div>
+                  <div class="word3">Email</div>
+                  <div class="word4" id="profileEmail">N/A</div>
+                  <div class="word3">Bio</div>
+                  <div class="word4" id="profileBio">No bio yet.</div>
+                  <div class="word3" id="profileSocialLabel" style="display:none;">Connect</div>
+                  <div class="word4" id="profileSocial"></div>
+                </div>
+                <div class="profile-btn-row">
+                  <button onclick="toggleProfileEdit(true)" class="edit-profile-btn"><i class="fa-solid fa-pen"></i> Edit Profile</button>
+                  <button onclick="doProfileLogout()" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                </div>
+              </div>
+
+              <!-- EDIT MODE -->
+              <div id="profileEditMode" style="display:none;">
+                <div class="profile-upload-circle" onclick="document.getElementById('photoFileInput').click()" title="Click to change photo">
+                  <img id="editAvatarPreview" src="" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;" />
+                  <div id="editAvatarInitials" class="edit-avatar-initials">?</div>
+                  <div class="upload-overlay-circle"><i class="fa-solid fa-camera"></i><br/>Change Photo</div>
+                </div>
+                <input type="file" id="photoFileInput" accept="image/*" style="display:none;" onchange="handlePhotoSelect(event)" />
+                <div class="profile-edit-fields">
+                  <label class="edit-label">Full Name *</label>
+                  <input type="text"  id="editName"     class="auth-input" placeholder="Your name" />
+                  <label class="edit-label">Roll No</label>
+                  <input type="text"  id="editRoll"     class="auth-input" placeholder="e.g. 2K23/CSE/123" />
+                  <label class="edit-label">Email</label>
+                  <input type="email" id="editEmail"    class="auth-input" placeholder="your@email.com" />
+                  <label class="edit-label">Bio</label>
+                  <textarea          id="editBio"      class="auth-input edit-textarea" placeholder="Tell something about yourself..."></textarea>
+                  <label class="edit-label"><i class="fa-brands fa-linkedin"></i> LinkedIn URL</label>
+                  <input type="url"   id="editLinkedin" class="auth-input" placeholder="https://linkedin.com/in/..." />
+                  <label class="edit-label"><i class="fa-brands fa-github"></i> GitHub URL</label>
+                  <input type="url"   id="editGithub"   class="auth-input" placeholder="https://github.com/..." />
+                </div>
+                <div class="auth-err" id="editProfileErr"></div>
+                <div class="profile-btn-row">
+                  <button onclick="saveProfileChanges()" class="auth-btn" style="width:auto;padding:12px 32px;"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                  <button onclick="toggleProfileEdit(false)" class="cancel-btn"><i class="fa-solid fa-xmark"></i> Cancel</button>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section id="settings" class="page active">
+            <div class="lists2">
+              <ul>
+                <li>
+                  <a href="#" onclick="toggleDarkMode(event)"
+                    ><i class="fa-solid fa-moon"></i><span id="darkModeLabel">Dark Mode - See your future, it's already dark</span></a
+                  >
+                </li>
+                <li>
+                  <a href="#"
+                    ><i class="fa-solid fa-palette"></i>Theme - Change colors,
+                    grades won't change</a
+                  >
+                </li>
+                <li>
+                  <a href="#"
+                    ><i class="fa-solid fa-location-dot"></i>Location - Even
+                    Google doesn't know where your life is going</a
+                  >
+                </li>
+                <li>
+                  <a href="#"
+                    ><i class="fa-solid fa-bell"></i>Notifications - Trying
+                    harder than you, so your future wakes up</a
+                  >
+                </li>
+                <li>
+                  <a href="#"
+                    ><i class="fa-solid fa-book-open"></i>Focus mode - Study 30
+                    minutes, break 2 hours</a
+                  >
+                </li>
+                <li>
+                  <a href="#"
+                    ><i class="fa-solid fa-language"></i>Language - Grammer left
+                    the chat</a
+                  >
+                </li>
+                <li>
+                  <a href="#"
+                    ><i class="fa-solid fa-comments"></i>Translator -
+                    Understands double meanings more than you think</a
+                  >
+                </li>
+                <li>
+                  <a href="#"
+                    ><i class="fa-solid fa-user-shield"></i>Security - More
+                    secure than your future</a
+                  >
+                </li>
+                <li>
+                  <a href="#"
+                    ><i class="fa-solid fa-building-columns"></i>College Info -
+                    Where attendance matters more than you</a
+                  >
+                </li>
+                <li>
+                  <a href="#"
+                    ><i class="fa-solid fa-headset"></i>Help - Even help needs
+                    help after hearing your problems</a
+                  >
+                </li>
+                <li>
+                  <a href="#"
+                    ><i class="fa-solid fa-circle-info"></i>About website -
+                    Still better than your ex</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </section>
+          <section id="analytics" class="page grid3 active">
+            <div
+              class="subcard"
+              id="over"
+              data-subject="Overall Attendance Summary"
+            >
+              <div class="sub2">Overall Attendance Summary</div>
+              <div class="lists3">
+                <ul>
+                  <li>Total Classes : <span class="ana-total">0</span></li>
+                  <li>Total Present : <span class="ana-present">0</span></li>
+                  <li>Total Absent : <span class="ana-absent">0</span></li>
+                  <li>
+                    Overall Percentage : <span class="ana-percent">0%</span>
+                  </li>
+                  <li>
+                    Safe / Danger status : <span class="ana-status">-</span>
+                  </li>
+                  <li>
+                    Total classes you can miss :
+                    <span class="ana-canmiss">0</span>
+                  </li>
+                  <li>
+                    Highest attendance in : <span class="best-sub">-</span>
+                  </li>
+                  <li>
+                    Lowest attendance in : <span class="worst-sub">-</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- Analytics subject subcards rendered dynamically by renderAnalyticsSubcards() in jss.js -->
+            <div id="analyticsEmptyMsg" style="display:none; padding:32px; text-align:center; color:#888; font-size:18px; grid-column:1/-1;">
+              📊 No subjects yet. Add your timetable first!
+            </div>
+          </section>
+        </div>
+        <div class="feature">
+          <div class="gpt cal">
+            <div class="cal-header">
+              <button id="prev">❮</button>
+              <h3 id="monthYear"></h3>
+              <button id="next">❯</button>
+            </div>
+
+            <div class="cal-days">
+              <span>Mo</span><span>Tu</span><span>We</span> <span>Th</span
+              ><span>Fr</span><span>Sa</span><span>Su</span>
+            </div>
+            <div class="cal-dates" id="dates"></div>
+          </div>
+          <div class="gpt tt">
+            <div class="tablehead">Time Table</div>
+            <table class="timetable">
+              <tr>
+                <th></th>
+                <th>8-9</th>
+                <th>9-10</th>
+                <th>10-11</th>
+                <th>11-12</th>
+                <th>12-1</th>
+                <th>1-2</th>
+                <th>2-3</th>
+                <th>3-4</th>
+              </tr>
+              <tr data-day="MO">
+                <td>MO</td>
+                <td colspan="2">Discrete</td>
+                <td colspan="2"></td>
+                <td colspan="2">Data Lab</td>
+                <td colspan="2">Physics</td>
+              </tr>
+              <tr data-day="TU">
+                <td>TU</td>
+                <td colspan="2">EVS</td>
+                <td>Discrete</td>
+                <td></td>
+                <td colspan="2">Physics Lab</td>
+                <td>Maths</td>
+                <td></td>
+              </tr>
+              <tr data-day="WE">
+                <td>WE</td>
+                <td colspan="2"></td>
+                <td>Maths</td>
+                <td></td>
+                <td>Physics</td>
+                <td colspan="2">Data</td>
+                <td></td>
+              </tr>
+              <tr data-day="TH">
+                <td>TH</td>
+                <td colspan="2"></td>
+                <td>Data</td>
+                <td colspan="2"></td>
+                <td colspan="2">Maths</td>
+                <td></td>
+              </tr>
+              <tr data-day="FR">
+                <td>FR</td>
+                <td colspan="2"></td>
+                <td>Discrete</td>
+                <td></td>
+                <td>Basic ML</td>
+                <td></td>
+                <td colspan="2">Basic ML Lab</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer>
+<div class="mobile-bars">
+  <button id="openNav"><i class="fa-solid fa-bars"></i></button>
+  <button id="openFeature"><i class="fa-solid fa-calendar"></i></button>
+</div>
+<div id="overlay"></div>
+
+      <div id="popup" class="popup hidden">
+        <div class="pop">
+          <div class="tit" id="popTitle">Popup</div>
+          <div class="msg" id="popMessage"></div>
+
+          <div class="but">
+            <button class="btn2 no" id="noBtn">No</button>
+            <button class="btn2 yes" id="yesBtn">Yes</button>
+            <button class="btn2 ok hidden" id="okBtn">OK</button>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="jss.js"></script>
+  </body>
+</html>

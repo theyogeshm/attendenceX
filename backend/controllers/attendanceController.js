@@ -1,36 +1,32 @@
-const db = require("../config/db");
+// attendanceController.js — Attendance CRUD using MongoDB/Mongoose
+const Attendance = require("../models/Attendance");
 const { getTodayInfo, computeSubjectStats, computeOverallAnalytics } = require("../utils/attendanceLogic");
 
 // ─── POST /api/attendance ─────────────────────────────────────────────────────
-const markAttendance = (req, res) => {
+const markAttendance = async (req, res) => {
   try {
     const { subject, status } = req.body;
-    const userId  = req.user.userId;
+    const userId   = req.user.userId;
     const username = req.user.username;
 
-    if (!subject || !status) {
+    if (!subject || !status)
       return res.status(400).json({ error: "subject and status are required" });
-    }
 
     const validStatuses = ["Present", "Absent", "Miss", "Leave"];
-    if (!validStatuses.includes(status)) {
+    if (!validStatuses.includes(status))
       return res.status(400).json({ error: `status must be one of: ${validStatuses.join(", ")}` });
-    }
 
     const todayInfo = getTodayInfo();
 
-    const record = {
-      _id:       `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`,
+    const record = await Attendance.create({
       userId,
       username,
-      date:      todayInfo.date,
-      day:       todayInfo.day,
-      Subject:   subject,
-      Status:    status,
-      createdAt: new Date().toISOString(),
-    };
+      date:    todayInfo.date,
+      day:     todayInfo.day,
+      Subject: subject,
+      Status:  status,
+    });
 
-    db.get("attendance").push(record).write();
     res.status(201).json({ success: true, data: record });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -38,10 +34,11 @@ const markAttendance = (req, res) => {
 };
 
 // ─── GET /api/attendance ──────────────────────────────────────────────────────
-const getAttendance = (req, res) => {
+const getAttendance = async (req, res) => {
   try {
     const userId  = req.user.userId;
-    const records = db.get("attendance").filter({ userId }).value().slice().reverse();
+    // Sort newest first so frontend slice(-5) gives last 5 correctly
+    const records = await Attendance.find({ userId }).sort({ createdAt: 1 }).lean();
     res.json({ success: true, count: records.length, data: records });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -49,11 +46,11 @@ const getAttendance = (req, res) => {
 };
 
 // ─── GET /api/attendance/subject/:subject ─────────────────────────────────────
-const getAttendanceBySubject = (req, res) => {
+const getAttendanceBySubject = async (req, res) => {
   try {
     const userId  = req.user.userId;
     const { subject } = req.params;
-    const records = db.get("attendance").filter({ userId, Subject: subject }).value();
+    const records = await Attendance.find({ userId, Subject: subject }).lean();
     res.json({ success: true, count: records.length, data: records });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -61,10 +58,10 @@ const getAttendanceBySubject = (req, res) => {
 };
 
 // ─── GET /api/attendance/analytics ───────────────────────────────────────────
-const getAnalytics = (req, res) => {
+const getAnalytics = async (req, res) => {
   try {
     const userId  = req.user.userId;
-    const records = db.get("attendance").filter({ userId }).value();
+    const records = await Attendance.find({ userId }).lean();
     const analytics = computeOverallAnalytics(records);
     res.json({ success: true, data: analytics });
   } catch (err) {
@@ -73,11 +70,11 @@ const getAnalytics = (req, res) => {
 };
 
 // ─── GET /api/attendance/analytics/subject/:subject ──────────────────────────
-const getSubjectAnalytics = (req, res) => {
+const getSubjectAnalytics = async (req, res) => {
   try {
     const userId  = req.user.userId;
     const { subject } = req.params;
-    const records = db.get("attendance").filter({ userId }).value();
+    const records = await Attendance.find({ userId }).lean();
     const stats = computeSubjectStats(records, subject);
     res.json({ success: true, subject, data: stats });
   } catch (err) {
@@ -87,25 +84,21 @@ const getSubjectAnalytics = (req, res) => {
 
 // ─── DELETE /api/attendance/last/:subject ─────────────────────────────────────
 // Deletes the most recent attendance entry for a specific subject
-const deleteLastAttendance = (req, res) => {
+const deleteLastAttendance = async (req, res) => {
   try {
     const userId  = req.user.userId;
     const { subject } = req.params;
 
-    // Find all records for this user + subject, sorted by createdAt
-    const all = db.get("attendance")
-      .filter((r) => r.userId === userId && r.Subject === subject)
-      .value()
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    // Find the most recent record for this user + subject
+    const last = await Attendance.findOne({ userId, Subject: subject })
+      .sort({ createdAt: -1 });
 
-    if (all.length === 0) {
+    if (!last)
       return res.status(404).json({ error: "No attendance records found for this subject." });
-    }
 
-    const lastId = all[0]._id;
-    db.get("attendance").remove({ _id: lastId }).write();
+    await Attendance.findByIdAndDelete(last._id);
 
-    res.json({ success: true, message: `Last entry for "${subject}" deleted.`, deletedId: lastId });
+    res.json({ success: true, message: `Last entry for "${subject}" deleted.`, deletedId: last._id });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

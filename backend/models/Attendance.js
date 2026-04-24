@@ -1,11 +1,14 @@
+// Attendance.js — Mongoose schema for attendance records
 const mongoose = require("mongoose");
 
 const AttendanceSchema = new mongoose.Schema(
   {
-    date:    { type: String, required: true },   // "dd/mm/yyyy" — format from getTodayInfo()
-    day:     { type: String, required: true },   // "Monday", "Tuesday", etc.
-    subject: { type: String, required: true },   // "Maths", "Physics", etc.
-    status:  {
+    userId:   { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    username: { type: String, required: true },
+    date:     { type: String, required: true },  // "dd/mm/yyyy"
+    day:      { type: String, required: true },  // "Monday", etc.
+    Subject:  { type: String, required: true },  // kept as "Subject" to match frontend
+    Status:   {
       type: String,
       required: true,
       enum: ["Present", "Absent", "Miss", "Leave"],

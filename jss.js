@@ -3,7 +3,7 @@
 // Backend API: http://localhost:5000
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://attendencex.onrender.com/api";
 
 // ─── Token helpers ────────────────────────────────────────────────────────────
 function getToken()           { return localStorage.getItem("att_token"); }
